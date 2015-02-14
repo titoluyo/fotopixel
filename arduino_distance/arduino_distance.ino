@@ -3,8 +3,7 @@
 
 void setup() 
 {
-//initialize serial communications at a 9600 baud rate
-Serial.begin(9600);
+  Serial.begin(9600);
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
 
@@ -20,8 +19,8 @@ void loop()
   digitalWrite(trigPin, LOW);
   duration = pulseIn(echoPin, HIGH);
   distance = (duration/2) / 29.1;
-//  Serial.println(String(distance)};
-Serial.println(duration);
-//Serial.print("-");
-//Serial.println(distance);
+  if (distance < 1000 && distance > 0){
+    Serial.println(distance);
+  }
+  delay(100);
 }
