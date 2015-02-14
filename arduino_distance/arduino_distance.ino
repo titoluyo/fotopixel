@@ -21,7 +21,9 @@ void loop()
   duration = pulseIn(echoPin, HIGH);
   distance = (duration/2) / 29.1;
 //  Serial.println(String(distance)};
-Serial.println(duration);
+  if (distance < 1000 && distance > 0){
+    Serial.println(distance);
+  }
 //Serial.print("-");
 //Serial.println(distance);
 }

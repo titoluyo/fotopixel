@@ -5,7 +5,7 @@ Serial myPort;
 Capture cam;
 PImage img;
 float lado;
-float factor = 5;
+float factor = 500;
 
 void setup() {
  setupSerial();
@@ -46,10 +46,10 @@ void draw() {
   obtenerImagen();
   dibujarCuadrados(lado);
 
-  println(distance);
+  println(lado);
 }
 
-int obtenerLado(){
+float obtenerLado(){
   int result = 0;
   
   if ( myPort.available() > 0) 
@@ -57,11 +57,15 @@ int obtenerLado(){
     String val = myPort.readStringUntil('\n');
     if (val.length() > 2) {
       val = val.substring(0, val.length()-2);
-      result = Integer.parseInt(val);
+      try{
+        result = Integer.parseInt(val);
+      } catch (Exception e) {
+        result = 5;
+      }
     }
   }
   
-  return sqrt(result); 
+  return result; 
 }
 
 void obtenerImagen() {
