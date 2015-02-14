@@ -5,19 +5,17 @@ Serial myPort;
 Capture cam;
 PImage img;
 float lado;
-float factor = 500;
+float factor = 0.5;
 
 void setup() {
- setupSerial();
- setupCamara();
+  lado = 5;
+  setupSerial();
+  setupCamara();
 }
 
 void setupSerial() {
-// Inicializando serial
-  String portName = Serial.list()[0]; //change the 0 to a 1 or 2 etc. to match your port
-  println(portName);
-  myPort = new Serial(this, portName, 9600); 
-  //myPort.write('0');
+  myPort = new Serial(this, Serial.list()[0], 9600);
+  myPort.bufferUntil(10); 
 }
 
 void setupCamara() {
@@ -42,30 +40,24 @@ void setupCamara() {
 
 
 void draw() {
-  lado = obtenerLado();
   obtenerImagen();
   dibujarCuadrados(lado);
 
   println(lado);
 }
 
-float obtenerLado(){
+void serialEvent(Serial p){
   int result = 0;
-  
-  if ( myPort.available() > 0) 
-  {  // If data is available,
-    String val = myPort.readStringUntil('\n');
-    if (val.length() > 2) {
-      val = val.substring(0, val.length()-2);
-      try{
-        result = Integer.parseInt(val);
-      } catch (Exception e) {
-        result = 5;
-      }
+  String val = p.readStringUntil('\n');
+  if (val.length() > 2) {
+    val = val.substring(0, val.length()-2);
+    try{
+      result = Integer.parseInt(val);
+    } catch (Exception e) {
+      result = 5;
     }
   }
-  
-  return result; 
+  lado = result *  factor;
 }
 
 void obtenerImagen() {
@@ -78,7 +70,6 @@ void obtenerSnapshot () {
   }
   img = cam;
 }
-
 
 void dibujarCuadrados(float lado){
   for(int i=0; i<width/lado; i++) {
